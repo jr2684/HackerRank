@@ -1,0 +1,12 @@
+SELECT wands.id, min_prices.age, wands.coins_needed, wands.power
+FROM wands
+inner join (select wands.code, wands.power, MIN(wands_property.age) as age,MIN(wands.coins_needed) as min_price
+            FROM wands
+            inner join wands_property
+            ON wands.code = wands_property.code
+            WHERE wands_property.is_evil = 0
+            GROUP BY wands.code, wands.power) min_prices
+ON wands.code = min_prices.code
+   AND wands.power = min_prices.power
+   AND wands.coins_needed = min_prices.min_price
+ORDER BY wands.power DESC, min_prices.age DESC;
